@@ -31,3 +31,4 @@ code {
 .jc-around { justify-content: space-around; }
 .flex1 { flex: 1; }
 .no-shrink { flex-shrink: 0; }
+.vg-tooltip { position: absolute; }
