@@ -16,8 +16,6 @@ import PropTypes from 'prop-types'
 const spec = {
 	title: 'A Simple Bar Chart',
 	description: 'A simple bar chart with embedded data.',
-	width: 400,
-	height: 600,
 	autosize: {
 		type: 'pad',
 		contains: 'padding',
@@ -95,7 +93,7 @@ class DemoChart extends PureComponent {
 	render () {
 		const style = { width: 400, height: 600 }
 		return (
-			<div id={this.props.id} style={style} />
+			<div id={this.props.id} />
 		)
 	}
 }

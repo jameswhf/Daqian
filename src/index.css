@@ -6,6 +6,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+    padding: 10px;
 }
 
 code {
@@ -30,5 +31,25 @@ code {
 .jc-space { justify-content: space-between; }
 .jc-around { justify-content: space-around; }
 .flex1 { flex: 1; }
+.flex-auto { flex: 1 1 auto; }
 .no-shrink { flex-shrink: 0; }
+
+.font-3xl { font-size: 20px; }
+.font-5xl { font-size: 24px; }
+.relative { position: relative; }
+
+
+.hover-shadow-4 {
+    position: relative;
+    box-shadow: 0 0 0 1px rgba(0,0,0,.1);
+    transition: all .15s ease
+}
+.hover-shadow-4:hover {
+    box-shadow: 0 2px 8px 0 rgba(0,0,0,.2);
+    transform: translateY(-1px);
+}
+.br2 {
+    border-radius: 2px;
+}
+
 .vg-tooltip { position: absolute; }
