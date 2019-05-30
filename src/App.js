@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
-import DemoChart from './components/charts/DemoChart'
+import React, { Component } from 'react'
+import getChart from './components/vega-chart/VegaFactory'
 
-import './App.css';
+import './App.css'
 
 const corpLogo = 'https://mayidata-image.oss-cn-hangzhou.aliyuncs.com/demo/domain_logo_x871dad7c8c374d079b9051c.png'
-const chartIds = [ 'column', 'multi_column', 'bar', 'bar_line' ]
+const charts = [ 'column', 'stack_column', 'group_column', 'bar_line' ]
 
 class App extends Component {
 	renderHeader () {
@@ -15,6 +15,7 @@ class App extends Component {
 				</div>
 				<div className="flex1 row-flex-center">
 					<img alt="guandata" src={corpLogo} className="corpLogo" />
+					{navigator.userAgent}
 				</div>
 			</div>
 		)
@@ -24,15 +25,18 @@ class App extends Component {
 			<div>
 				{this.renderHeader()}
 				<div className="list-grid flex1" style={{ marginTop: 20 }}>
-					{chartIds.map(chartId => (
-						<div key={chartId} className="flex-auto relative card hover-shadow-4 br2">
-							<DemoChart id={chartId} />
-							<div className="column-flex">
-								<div className="flex1">{chartId}</div>
-								<div className="flex1">{'这是描述信息'}</div>
+					{charts.map(type => {
+						const TargetChart = getChart(type)
+						return (
+							<div key={type} className="flex-auto relative card hover-shadow-4 br2">
+								<TargetChart id={type} />
+								<div className="column-flex">
+									<div className="flex1">{type}</div>
+									<div className="flex1">{'这是描述信息'}</div>
+								</div>
 							</div>
-						</div>
-					))}
+						)
+					})}
 				</div>
 			</div>
 		)
