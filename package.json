@@ -9,6 +9,11 @@
     "react-dom": "^16.8.3",
     "react-scripts": "2.1.5"
   },
+  "devDependencies": {
+    "vega-dataflow": "^5.2.1",
+    "vega-transforms": "^4.1.0",
+    "vega-util": "^1.10.0"
+  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",

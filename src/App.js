@@ -4,7 +4,7 @@ import getChart from './components/vega-chart/VegaFactory'
 import './App.css'
 
 const corpLogo = 'https://mayidata-image.oss-cn-hangzhou.aliyuncs.com/demo/domain_logo_x871dad7c8c374d079b9051c.png'
-const charts = [ 'column', 'stack_column', 'group_column', 'bar_line' ]
+const charts = [ 'column', 'stack_column', 'group_column', 'demo' ]
 
 class App extends Component {
 	renderHeader () {
