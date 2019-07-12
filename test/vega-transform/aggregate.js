@@ -14,15 +14,15 @@ const data = [
 	{ year: 2009, city: 'SH', sex: 2, num: 400 },
 ]
 
-const [ city, num ] = [ 'city', 'num' ].map(v => util.field(v))
+const [ year, city, num ] = [ 'year', 'city', 'num' ].map(v => util.field(v))
 
 const df = new vega.Dataflow()
 const col = df.add(tx.collect)
 
 const agg = df.add(tx.aggregate, {
-	groupby: [ city ],
-	// fields: [ num, num ],
-	// ops: [ 'count', 'sum' ],
+	groupby: [ year, city ],
+	fields: [ num, num ],
+	ops: [ 'count', 'average' ],
 	pulse: col,
 })
 

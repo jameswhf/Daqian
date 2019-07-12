@@ -70,7 +70,6 @@ const spec = {
 	axes: [
 		{ orient: 'bottom', scale: 'xscale' },
 		{ orient: 'left', scale: 'yscale', tickCount: 5, offset: 0 },
-		{ orient: 'top', scale: 'xscale' },
 	],
 	marks: [
 		{
@@ -105,7 +104,6 @@ const spec = {
 					y: { scale: 'yscale', signal: 'tooltip.amount', offset: -2 },
 					text: { signal: 'tooltip.amount' },
 					fillOpacity: [
-						{ test: 'isNaN(tooltip.amount)', value: 0 },
 						{ value: 1 },
 					]
 

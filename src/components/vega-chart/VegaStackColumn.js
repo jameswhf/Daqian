@@ -1,5 +1,11 @@
 import VegaChart from './VegaChart'
 
+/**
+ * STACKED_COLUMN
+ * row: [ 'x' ]
+ * column: [ 'c' ]
+ * metric: [ 'y' ]
+ */
 const spec = {
 	"$schema": "https://vega.github.io/schema/vega/v5.json",
 	"width": 500,
@@ -21,63 +27,91 @@ const spec = {
 				{"x": 8, "y": 68, "c":0}, {"x": 8, "y": 16, "c":1},
 				{"x": 9, "y": 49, "c":0}, {"x": 9, "y": 15, "c":1}
 			],
-			"transform": [
+			transform: [
 				{
-					"type": "stack",
-					"groupby": ["x"],
-					"sort": {"field": "c"},
-					"field": "y"
+					type: 'stack',
+					field: 'y',
+					groupby: [ 'x' ],
+					sort: { field: 'c' }
 				}
 			]
 		}
 	],
-
-	"scales": [
+	signals: [
 		{
-			"name": "x",
-			"type": "band",
-			"range": "width",
-			"domain": {"data": "table", "field": "x"}
-		},
-		{
-			"name": "y",
-			"type": "linear",
-			"range": "height",
-			"nice": true, "zero": true,
-			"domain": {"data": "table", "field": "y1"}
-		},
-		{
-			"name": "color",
-			"type": "ordinal",
-			"range": "category",
-			"domain": {"data": "table", "field": "c"}
+			name: 'tooltip',
+			value: {},
+			on: [
+				{ events: 'rect:mouseover', update: 'datum' },
+				{ events: 'rect:mouseout', update: '{}' }
+			]
 		}
 	],
-
-	"axes": [
-		{"orient": "bottom", "scale": "x", "zindex": 1},
-		{"orient": "left", "scale": "y", "zindex": 1}
-	],
-
-	"marks": [
+	scales: [
 		{
-			"type": "rect",
-			"from": {"data": "table"},
-			"encode": {
-				"enter": {
-					"x": {"scale": "x", "field": "x"},
-					"width": {"scale": "x", "band": 1, "offset": -1},
-					"y": {"scale": "y", "field": "y0"},
-					"y2": {"scale": "y", "field": "y1"},
-					"fill": {"scale": "color", "field": "c"}
+			name: 'xscale',
+			type: 'band',
+			domain: { data: 'table', field: 'x' },
+			range: 'width',
+			paddingInner: 0.1,
+			paddingOuter: 0.1,
+		},
+		{
+			name: 'yscale',
+			type: 'linear',
+			domain: { data: 'table', field: 'y1' },
+			range: 'height',
+			nice: true, // quantitative scales, 让domain的start、end都是整数. [0.2034, 0.9965]会用 [0.2, 1.0]
+			zero: false,
+		},
+		{
+			name: 'color',
+			type: 'ordinal',
+			domain: { data: 'table', field: 'c' },
+			range: [ 'steelblue', 'firebrick' ]
+		}
+	],
+	axes: [
+		{ scale: 'xscale', orient: 'bottom' },
+		{ scale: 'yscale', orient: 'left', tickCount: 3 },
+	],
+	marks: [
+		{
+			type: 'rect',
+			from: { data: 'table' },
+			encode: {
+				enter: {
+					x: { scale: 'xscale', field: 'x' },
+					width: { scale: 'xscale', band: 1 },
+					y: { scale: 'yscale', field: 'y0' },
+					y2: { scale: 'yscale', field: 'y1' },
+					fill: { scale: 'color', field: 'c' }
 				},
-				"update": {
-					"fillOpacity": {"value": 1}
+				update: {
+					fillOpacity: { value: 1 },
 				},
-				"hover": {
-					"fillOpacity": {"value": 0.5}
+				hover: {
+					fillOpacity: { value: 0.5 }
 				}
 			}
+		},
+		{
+			type: 'text',
+			interactive: false,
+			encode: {
+				enter: {
+					align: { value: 'center' },
+					fill: { value: '#4285F4' },
+				},
+				update: {
+					x: { scale: 'xscale', signal: 'tooltip.x', band: 0.5 },
+					y: { scale: 'yscale', signal: 'tooltip.y1', offset: -2 },
+					text: { signal: 'tooltip.y' }
+				},
+				hover: {
+					fillOpacity: { value: 1 }
+				}
+			},
 		}
 	]
 }
