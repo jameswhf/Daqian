@@ -1,10 +1,18 @@
 import VegaChart from './VegaChart'
 
+/**
+ * GROUPED_COLUMN
+ * row: [ 'category' ]
+ * column: [ 'position' ]
+ * metric: [ 'value' ]
+ */
+
 const spec = {
 	"$schema": "https://vega.github.io/schema/vega/v5.json",
 	"width": 300,
 	"height": 240,
 	"padding": 5,
+	autosize: 'fit',
 
 	"data": [
 		{
@@ -25,94 +33,124 @@ const spec = {
 			]
 		}
 	],
-
-	"scales": [
+	scales: [
 		{
-			"name": "yscale",
-			"type": "band",
-			"domain": {"data": "table", "field": "category"},
-			"range": "height",
-			"padding": 0.2
+			name: 'xscale',
+			type: 'band',
+			domain: { data: 'table', field: 'category' },
+			range: 'width',
+			padding: 0.2
 		},
 		{
-			"name": "xscale",
-			"type": "linear",
-			"domain": {"data": "table", "field": "value"},
-			"range": "width",
-			"round": true,
-			"zero": true,
-			"nice": true
+			name: 'yscale',
+			type: 'linear',
+			domain: { data: 'table', field: 'value' },
+			range: 'height',
+			round: true,
+			nice: true,
 		},
 		{
-			"name": "color",
-			"type": "ordinal",
-			"domain": {"data": "table", "field": "position"},
-			"range": {"scheme": "category20"}
+			name: 'color',
+			type: 'ordinal',
+			domain: { data: 'table', field: 'position' },
+			range: { scheme: 'category20' },
 		}
 	],
-
-	"axes": [
-		{"orient": "left", "scale": "yscale", "tickSize": 0, "labelPadding": 4, "zindex": 1},
-		{"orient": "bottom", "scale": "xscale"}
+	axes: [
+		{ orient: 'bottom', scale: 'xscale' },
+		{ orient: 'left', scale: 'yscale' }
 	],
-
-	"marks": [
+	legends: [
 		{
-			"type": "group",
-
-			"from": {
-				"facet": {
-					"data": "table",
-					"name": "facet",
-					"groupby": "category"
-				}
-			},
-
-			"encode": {
-				"enter": {
-					"y": {"scale": "yscale", "field": "category"}
-				}
-			},
-
-			"signals": [
-				{"name": "height", "update": "bandwidth('yscale')"}
-			],
-
-			"scales": [
-				{
-					"name": "pos",
-					"type": "band",
-					"range": "height",
-					"domain": {"data": "facet", "field": "position"}
-				}
-			],
-
-			"marks": [
-				{
-					"name": "bars",
-					"from": {"data": "facet"},
-					"type": "rect",
-					"encode": {
-						"enter": {
-							"y": {"scale": "pos", "field": "position"},
-							"height": {"scale": "pos", "band": 1},
-							"x": {"scale": "xscale", "field": "value"},
-							"x2": {"scale": "xscale", "value": 0},
-							"fill": {"scale": "color", "field": "position"}
-						}
+			fill: 'color', // name of scale that maps to a fill color
+			orient: 'right',
+			direction: 'vertical',
+			title: 'Position',
+			symbolType: 'arrow',
+			tickCount: 2,
+			encode: {
+				title: {
+					update: {
+						fontSize: { value: 14 },
+						fill: { value: 'firebrick' }
 					}
 				},
+				labels: {
+					interactive: true,
+					update: {
+						fontSize: { value: 14 },
+						fill: { value: 'black' }
+					},
+					hover: {
+						fill: { value: 'blue' }
+					}
+				},
+				symbols: {
+					update: {
+						stroke: { value: 'transparent' }
+					}
+				},
+				legend: {
+					update: {
+						stroke: { value: '#ccc' },
+						strokeWidth: { value: 1.5}
+					}
+				}
+			}
+		}
+	],
+	marks: [
+		{
+			type: 'group',
+			from: {
+				facet: {
+					data: 'table',
+					name: 'g_data',
+					groupby: 'category'
+				}
+			},
+			encode: {
+				enter: {
+					x: { scale: 'xscale', field: 'category' }
+				}
+			},
+			signals: [
+				{ name: 'width', update: 'bandwidth("xscale")' }
+			],
+			scales: [
 				{
-					"type": "text",
-					"from": {"data": "bars"},
-					"encode": {
-						"enter": {
-							"x": {"field": "x2", "offset": -5},
-							"y": {"field": "y", "offset": {"field": "height", "mult": 0.5}},
-							"fill": {"value": "#4285F4"},
-							"align": {"value": "white"},
-							"baseline": {"value": "middle"},
-							"text": {"field": "datum.value"}
+					name: 'pos',
+					type: 'band',
+					domain: { data: 'g_data', field: 'position' },
+					range: 'width',
+				}
+			],
+			marks: [
+				{
+					name: 'cols',
+					type: 'rect',
+					from: { data: 'g_data' },
+					encode: {
+						enter: {
+							x: { scale: 'pos', field: 'position' },
+							width: { scale: 'pos', band: 1 },
+							y: { scale: 'yscale', value: 0 },
+							y2: { scale: 'yscale', field: 'value' },
+							fill: { scale: 'color', field: 'position' }
+						}
+					},
+				},
+				{
+					name: 'metric_value',
+					type: 'text',
+					from: { data: 'g_data' },
+					encode: {
+						enter: {
+							x: { scale: 'pos', field: 'position', band: 0.5 },
+							y: { scale: 'yscale', field: 'value', offset: 10 },
+							stroke: { value: 'white' },
+							text: { field: 'value' },
+							align: { value: 'center' }
 						}
 					}
 				}
