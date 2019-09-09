@@ -19,7 +19,7 @@
  * 	  1. 数据标签的位置
  * 	  2. 交互(外移、高亮)
  */
-import { data as pieTable } from './pie-data'
+import { data as pieTable, theme } from './pie-data'
 import VegaChart from '../../vega-chart/VegaChart'
 
 const pieValues = pieTable //.filter(row => row['利润'] !== null)
@@ -72,14 +72,30 @@ const spec = {
 					update: 'if (clickedArcs[0]["店铺名称"] === datum["店铺名称"], [{}], [ datum ])'
 				}
 			]
-		}
+		},
+		{
+			name: 'theme',
+			value: theme,
+		},
 	],
 	scales: [
 		{
 			name: 'colorScale',
 			type: 'ordinal',
 			domain: { data: 'table', field: '店铺名称' },
-			range: { scheme: 'category20' },
+			range: { signal: 'theme' },
+			// range: [
+			// 	"#5da052",
+			// 	"#5da052",
+			// 	"#5da052",
+			// 	"#5da052",
+			// 	"#5da052",
+			// 	"#ecc853",
+			// 	"#ad7aa1",
+			// 	"#ef9ba7",
+			// 	"#9b7461",
+			// 	"#bab0ac"
+			// ],
 		},
 	],
 	marks: [
@@ -186,3 +202,5 @@ class GPieChart extends VegaChart {
 }
 
 export default GPieChart
+
+// vega.scheme('basic', ['#f00', '#0f0', '#00f', '#ff0', '#f0f', '#0ff']);

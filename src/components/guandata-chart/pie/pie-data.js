@@ -3,10 +3,17 @@
  * 页面: vega-chart-references (https://app.mayidata.com/page/v62417cd515f34ea3b48975e)
  */
 import { getTableFromGrid } from '../transformer'
+import { getColors } from '../../chart-props/theme'
 
 const guanRes = {
 	data: {
 		chartMain: {
+			props: {
+				themeColor: {
+					theme: 'DARK_BLUE',
+					colors: [ "rgba(104, 190, 168, 1)", "rgba(104, 190, 168, 1)", "rgba(104, 190, 168, 1)", null, null, null, null, null, null, null ]
+				  }
+			},
 			row: {
 				fieldFormat: { dimThreshold: [ null ], linkFormat: [ null ] },
 				meta: [
@@ -70,3 +77,4 @@ const guanRes = {
 }
 
 export const data = getTableFromGrid(guanRes)
+export const theme = getColors(guanRes)
